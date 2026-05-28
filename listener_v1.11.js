@@ -63,7 +63,14 @@ function getAttributionParams() {
 // Guard helpers
 // =====================================================
 function isValidDeedaEvent(event) {
-  return !!(event.origin && event.origin.includes("deeda.care") && event.data);
+  if (!event.data) return false;
+  try {
+    const u = new URL(event.origin);
+    return u.protocol === "https:" &&
+           (u.hostname === "deeda.care" || u.hostname === "www.deeda.care");
+  } catch (_) {
+    return false;
+  }
 }
 
 function getDeedaEventData(event) {
